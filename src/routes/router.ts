@@ -1,8 +1,8 @@
-const express = require('express');
+import express = require('express');
+import { User } from '../models/user'
+
 
 const router = express.Router();
-
-const {User} = require('../models/user');
 
 router.get('/api/users', (req, res) => {
     User.find({}, (err, data) => {
@@ -27,4 +27,4 @@ router.post('/api/users/add', (req, res) =>{
     })
 })
 
-module.exports = router;
+export default router
