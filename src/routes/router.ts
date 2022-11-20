@@ -49,8 +49,9 @@ router.get('/api/users/:id', async (req, res) => {
 //Update specific user
 router.put('/api/users/update/:id', async (req, res) => {
     const { id }: any = req.params
+    const update = { airtable_key: req.body }
     try {
-        const result = await User.findByIdAndUpdate({ lineId: id }, req.body)
+        const result = await User.findOneAndUpdate({ lineId: id }, update)
         res.send(result);
     } catch (e) {
         res.status(500).send(e)
