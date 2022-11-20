@@ -16,40 +16,45 @@ router.get('/api/users', (req, res) => {
 });
 
 //Create new user
-router.post('/api/users/add', (req, res) =>{
+router.post('/api/users/add', (req, res) => {
     const usr = new User({
         lineId: req.body.lineId,
         airtable_key: req.body.airtable_key
-    }); 
+    });
     usr.save((err, data) => {
         res.status(200).json({
-            code:200, 
-            message:'User added susccessfully!', 
-            User:data});
+            code: 200,
+            message: 'User added susccessfully!',
+            User: data
+        });
     })
 })
 
 //Find specific user
-router.get('/api/users/:id', (req, res) => {
+router.get('/api/users/:id', async (req, res) => {
     const { id }: any = req.params
-    User.find({ lineId: id }, (err, data) => {
-        if (!err) {
-            res.send(data);
+    try {
+        const result = await User.find({ lineId: id })
+        if (result.length) {
+            res.send(result);
         } else {
-            console.log(err);
+            res.status(404).send("Data not found")
         }
-    });
+    } catch (e) {
+        res.status(500).send(e)
+    }
+
 });
 
 //Update specific user
 router.put('/api/users/update/:id', async (req, res) => {
     const { id }: any = req.params
     try {
-        await User.findByIdAndUpdate({ lineId: id }, req.body)
-        res.send("Update success");
+        const result = await User.findByIdAndUpdate({ lineId: id }, req.body)
+        res.send(result);
     } catch (e) {
         res.status(500).send(e)
     }
-    
+
 })
 export default router
